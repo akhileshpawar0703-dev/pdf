@@ -53,6 +53,16 @@ button:hover { filter:brightness(1.04); transform: translateY(-1px); }
 
 .preview-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.55rem; border:1px dashed #c0d1ef; border-radius:12px; padding:1rem; color:var(--muted); margin-top:.55rem; }
 .preview-placeholder img { width:70px; height:70px; opacity:.9; }
+
+body.theme-white { --accent-a:#ffffff; --accent-b:#f3f6fb; }
+body.theme-white button,
+body.theme-white .mode-btn.active,
+body.theme-white .cta {
+  color:#1c2a45;
+  border:1px solid #c7d5f0;
+  background:linear-gradient(120deg,#ffffff,#eef3fb);
+}
+
 body.theme-violet { --accent-a:#7c3aed; --accent-b:#8b5cf6; }
 body.theme-emerald { --accent-a:#059669; --accent-b:#10b981; }
 

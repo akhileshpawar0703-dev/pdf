@@ -12,6 +12,7 @@ const clearPreviewBtn = document.getElementById('clear-preview');
 
 const accentStyle = document.getElementById('accent-style');
 const rememberWorkspace = document.getElementById('remember-workspace');
+const whiteThemeBtn = document.getElementById('white-theme-btn');
 
 function setMode(mode, save = true) {
   const pdfMode = mode === 'pdf';
@@ -100,10 +101,16 @@ function resetAccordionForMode(mode) {
 }
 
 function applyAccent(theme) {
-  document.body.classList.remove('theme-violet', 'theme-emerald');
+  document.body.classList.remove('theme-violet', 'theme-emerald', 'theme-white');
   if (theme === 'violet') document.body.classList.add('theme-violet');
   if (theme === 'emerald') document.body.classList.add('theme-emerald');
+  if (theme === 'white') document.body.classList.add('theme-white');
   localStorage.setItem('studiopdf.accent', theme);
+}
+
+function enableWhiteTheme() {
+  accentStyle.value = 'white';
+  applyAccent('white');
 }
 
 async function submitForm(form) {
@@ -152,6 +159,8 @@ document.querySelectorAll('form[data-endpoint]').forEach((form) => {
 
 clearPreviewBtn.addEventListener('click', clearPreview);
 accentStyle.addEventListener('change', () => applyAccent(accentStyle.value));
+if (whiteThemeBtn) whiteThemeBtn.addEventListener('click', enableWhiteTheme);
+
 rememberWorkspace.addEventListener('change', () => {
   if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.mode');
 });
@@ -159,7 +168,7 @@ rememberWorkspace.addEventListener('change', () => {
 initAccordion(pdfWorkspace);
 initAccordion(imageWorkspace);
 
-const savedTheme = localStorage.getItem('studiopdf.accent') || 'blue';
+const savedTheme = localStorage.getItem('studiopdf.accent') || 'white';
 accentStyle.value = savedTheme;
 applyAccent(savedTheme);
 

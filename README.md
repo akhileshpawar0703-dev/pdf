@@ -62,6 +62,6 @@ python pdf_editor.py --help
 - The editor now uses a split layout: **left side accordion toolbar + settings**, **right side live preview**.
 - Tools are listed one-by-one and use native expandable sections; clicking a tool title expands its settings + action button.
 - The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
-- New UX feature: selectable accent theme (Blue/Violet/Emerald) and optional remembered workspace.
+- New UX feature: selectable accent theme (White/Blue/Violet/Emerald), optional remembered workspace, and a dedicated **Use White Theme** button in editor settings.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.
 - UI uses a clean light (white-first) visual theme for better readability.
