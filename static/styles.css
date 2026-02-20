@@ -28,6 +28,13 @@ body { margin:0; background: radial-gradient(circle at 10% 0%, #eef4ff, var(--bg
 .mode-btn { border-radius:10px; border:1px solid #bfd0ef; padding:.62rem .9rem; background:#f8fbff; color:var(--text); cursor:pointer; }
 .mode-btn.active { background:linear-gradient(120deg,var(--accent-a),var(--accent-b)); color:#fff; border:none; }
 .settings { display:grid; gap:.7rem; }
+
+.search-label { font-size:.86rem; color:var(--muted); margin-top:.2rem; }
+.toolbar-head { display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
+.toolbar-actions { display:flex; gap:.4rem; }
+.toolbar-action { font-size:.78rem; padding:.45rem .6rem; }
+.tool-item.hidden-by-search { display:none; }
+
 .setting-row { display:flex; justify-content:space-between; align-items:center; gap:.8rem; }
 .setting-row.inline { justify-content:flex-start; }
 .workspace-title { margin:.1rem 0 .8rem; color:#30476f; }

@@ -24,6 +24,8 @@
           <button class="mode-btn panel-btn" type="button" data-panel="pdf-workspace">PDF Toolbar</button>
           <button class="mode-btn panel-btn" type="button" data-panel="image-workspace">Image Toolbar</button>
         </div>
+        <label class="search-label" for="tool-search">Find a tool</label>
+        <input id="tool-search" type="text" placeholder="Type e.g. compress, crop, merge" />
       </section>
 
       <section id="settings-panel" class="card settings hidden">
@@ -45,7 +47,7 @@
       </section>
 
       <section id="pdf-workspace" class="workspace card accordion-wrap hidden">
-        <h3 class="workspace-title">PDF Toolbar</h3>
+        <div class="toolbar-head"><h3 class="workspace-title">PDF Toolbar</h3><div class="toolbar-actions"><button type="button" class="ghost toolbar-action" data-target="pdf-workspace" data-action="expand">Expand all</button><button type="button" class="ghost toolbar-action" data-target="pdf-workspace" data-action="collapse">Collapse all</button></div></div>
 
         <details class="tool-item" open>
           <summary>PDF Merge</summary>
@@ -92,7 +94,7 @@
       </section>
 
       <section id="image-workspace" class="workspace card accordion-wrap hidden">
-        <h3 class="workspace-title">Image Toolbar</h3>
+        <div class="toolbar-head"><h3 class="workspace-title">Image Toolbar</h3><div class="toolbar-actions"><button type="button" class="ghost toolbar-action" data-target="image-workspace" data-action="expand">Expand all</button><button type="button" class="ghost toolbar-action" data-target="image-workspace" data-action="collapse">Collapse all</button></div></div>
 
         <details class="tool-item" open>
           <summary>Image Resizer</summary>

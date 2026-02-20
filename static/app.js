@@ -17,6 +17,8 @@ const rememberWorkspace = document.getElementById('remember-workspace');
 const whiteThemeBtn = document.getElementById('white-theme-btn');
 const activityLog = document.getElementById('activity-log');
 const clearActivityBtn = document.getElementById('clear-activity');
+const toolSearch = document.getElementById('tool-search');
+const toolbarActionButtons = document.querySelectorAll('.toolbar-action');
 
 function setActivePanel(panelId, save = true) {
   const target = document.getElementById(panelId);
@@ -103,6 +105,28 @@ function resetAccordionForWorkspace(scope) {
   const items = scope.querySelectorAll('.tool-item');
   items.forEach((item, idx) => {
     item.open = idx === 0;
+  });
+}
+
+
+function filterTools(query) {
+  const q = (query || '').trim().toLowerCase();
+  [pdfWorkspace, imageWorkspace].forEach((scope) => {
+    const items = scope.querySelectorAll('.tool-item');
+    items.forEach((item) => {
+      const label = item.querySelector('summary')?.textContent?.toLowerCase() || '';
+      const match = !q || label.includes(q);
+      item.classList.toggle('hidden-by-search', !match);
+    });
+  });
+}
+
+function setToolbarOpenState(workspaceId, expand) {
+  const scope = document.getElementById(workspaceId);
+  if (!scope) return;
+  scope.querySelectorAll('.tool-item').forEach((item) => {
+    if (item.classList.contains('hidden-by-search')) return;
+    item.open = expand;
   });
 }
 
@@ -193,6 +217,13 @@ clearPreviewBtn.addEventListener('click', clearPreview);
 accentStyle.addEventListener('change', () => applyAccent(accentStyle.value));
 if (whiteThemeBtn) whiteThemeBtn.addEventListener('click', enableWhiteTheme);
 if (clearActivityBtn) clearActivityBtn.addEventListener('click', clearActivityLog);
+if (toolSearch) toolSearch.addEventListener('input', () => filterTools(toolSearch.value));
+toolbarActionButtons.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const expand = btn.dataset.action === 'expand';
+    setToolbarOpenState(btn.dataset.target, expand);
+  });
+});
 
 rememberWorkspace.addEventListener('change', () => {
   if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.panel');

@@ -62,6 +62,7 @@ python pdf_editor.py --help
 - The editor now uses a split layout: **left side panel buttons + expandable toolbars/settings**, **right side live preview**.
 - Click panel buttons (Settings / PDF Toolbar / Image Toolbar) to show that panel; tool sections inside each toolbar expand natively to reveal options.
 - New UI enhancement: a **Recent Actions** panel logs started/completed/failed operations with timestamps for quick feedback.
+- Added **Find a tool** search and **Expand all / Collapse all** controls in toolbars for faster navigation in larger tool sets.
 - The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
 - New UX feature: selectable accent theme (White/Blue/Violet/Emerald), optional remembered workspace, and a dedicated **Use White Theme** button in editor settings.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.
