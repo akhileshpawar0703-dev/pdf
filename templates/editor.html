@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudioPDF - Editor</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <header class="hero">
+    <div class="top-nav"><a class="nav-link" href="/">← Home</a><a class="nav-link" href="/editor">Editor</a></div>
+    <h1>StudioPDF</h1>
+    <p>Preview on the left. Tools and settings on the right.</p>
+  </header>
+
+  <main class="container split-layout">
+    <section class="left-pane card preview">
+      <div class="pane-head">
+        <h2>Live Preview</h2>
+        <button id="clear-preview" type="button" class="ghost">Clear</button>
+      </div>
+      <p id="preview-label">Select a file from any tool to preview it here.</p>
+      <div class="preview-placeholder" id="preview-placeholder">
+        <img src="/static/images/toolkit-image.svg" alt="preview placeholder" />
+        <span>Live preview appears here</span>
+      </div>
+      <img id="image-preview" alt="Image preview" hidden />
+      <iframe id="pdf-preview" title="PDF preview" hidden></iframe>
+      <ul id="multi-preview"></ul>
+    </section>
+
+    <section class="right-pane">
+      <section class="card mode-switch">
+        <h2>Workspace</h2>
+        <div class="mode-buttons">
+          <button id="mode-pdf" class="mode-btn active" type="button" data-mode="pdf">PDF Tools</button>
+          <button id="mode-image" class="mode-btn" type="button" data-mode="image">Image Tools</button>
+        </div>
+      </section>
+
+      <section class="card settings">
+        <h2>Settings</h2>
+        <label class="setting-row">
+          <span>Accent style</span>
+          <select id="accent-style">
+            <option value="blue">Blue</option>
+            <option value="violet">Violet</option>
+            <option value="emerald">Emerald</option>
+          </select>
+        </label>
+        <label class="setting-row inline">
+          <input type="checkbox" id="remember-workspace" checked />
+          <span>Remember selected workspace</span>
+        </label>
+      </section>
+
+      <section id="pdf-workspace" class="workspace">
+        <h3 class="workspace-title">PDF Toolbar</h3>
+        <div class="tool-grid">
+          <section class="card tool-card">
+            <h2>PDF Merge</h2>
+            <form data-endpoint="/api/pdf/merge">
+              <input type="file" name="files" accept="application/pdf" multiple required />
+              <button>Merge PDFs</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>PDF Extract Pages</h2>
+            <form data-endpoint="/api/pdf/extract">
+              <input type="file" name="file" accept="application/pdf" required />
+              <input type="text" name="pages" placeholder="e.g. 1,3-5,8-" required />
+              <button>Extract</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>PDF Compress</h2>
+            <form data-endpoint="/api/pdf/compress">
+              <input type="file" name="file" accept="application/pdf" required />
+              <button>Compress PDF</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>Convert Images to PDF</h2>
+            <form data-endpoint="/api/pdf/convert/image-to-pdf">
+              <input type="file" name="images" accept="image/*" multiple required />
+              <button>Create PDF</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section id="image-workspace" class="workspace hidden">
+        <h3 class="workspace-title">Image Toolbar</h3>
+        <div class="tool-grid">
+          <section class="card tool-card">
+            <h2>Image Resizer</h2>
+            <form data-endpoint="/api/image/resize">
+              <input type="file" name="file" accept="image/*" required />
+              <div class="row">
+                <input type="number" name="width" placeholder="Width" required />
+                <input type="number" name="height" placeholder="Height" required />
+              </div>
+              <select name="format">
+                <option>PNG</option><option>JPEG</option><option>WEBP</option>
+              </select>
+              <button>Resize</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>Image Compressor</h2>
+            <form data-endpoint="/api/image/compress">
+              <input type="file" name="file" accept="image/*" required />
+              <input type="number" name="quality" min="10" max="95" value="75" />
+              <button>Compress</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>Image Crop</h2>
+            <form data-endpoint="/api/image/crop">
+              <input type="file" name="file" accept="image/*" required />
+              <div class="row">
+                <input type="number" name="left" placeholder="Left" value="0" required />
+                <input type="number" name="top" placeholder="Top" value="0" required />
+              </div>
+              <div class="row">
+                <input type="number" name="right" placeholder="Right" value="1000" required />
+                <input type="number" name="bottom" placeholder="Bottom" value="1000" required />
+              </div>
+              <select name="format">
+                <option>PNG</option><option>JPEG</option><option>WEBP</option>
+              </select>
+              <button>Crop</button>
+            </form>
+          </section>
+
+          <section class="card tool-card">
+            <h2>Image Converter</h2>
+            <form data-endpoint="/api/image/convert">
+              <input type="file" name="file" accept="image/*" required />
+              <select name="format">
+                <option>PNG</option><option>JPEG</option><option>WEBP</option><option>BMP</option>
+              </select>
+              <button>Convert</button>
+            </form>
+          </section>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <p id="status"></p>
+  <script src="/static/app.js"></script>
+</body>
+</html>
