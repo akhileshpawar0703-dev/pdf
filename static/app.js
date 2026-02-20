@@ -77,23 +77,26 @@ function updatePreview(fileInput) {
 
 
 function initAccordion(scope) {
-  const items = scope.querySelectorAll('.accordion-item');
+  const items = scope.querySelectorAll('.tool-item');
   items.forEach((item) => {
-    const trigger = item.querySelector('.accordion-trigger');
-    if (!trigger.dataset.bound) {
-      trigger.addEventListener('click', () => {
-        items.forEach((other) => other.classList.remove('open'));
-        item.classList.add('open');
+    if (!item.dataset.bound) {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
+        items.forEach((other) => {
+          if (other !== item) other.open = false;
+        });
       });
-      trigger.dataset.bound = '1';
+      item.dataset.bound = '1';
     }
   });
 }
 
 function resetAccordionForMode(mode) {
   const activeScope = mode === 'pdf' ? pdfWorkspace : imageWorkspace;
-  const items = activeScope.querySelectorAll('.accordion-item');
-  items.forEach((item, idx) => item.classList.toggle('open', idx === 0));
+  const items = activeScope.querySelectorAll('.tool-item');
+  items.forEach((item, idx) => {
+    item.open = idx === 0;
+  });
 }
 
 function applyAccent(theme) {
