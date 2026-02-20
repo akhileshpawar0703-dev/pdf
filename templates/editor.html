@@ -17,15 +17,16 @@
 
   <main class="container split-layout editor-layout">
     <section class="left-pane toolbar-pane">
-      <section class="card mode-switch">
-        <h2>Workspace</h2>
+      <section class="card panel-switch">
+        <h2>Panels</h2>
         <div class="mode-buttons">
-          <button id="mode-pdf" class="mode-btn active" type="button" data-mode="pdf">PDF Tools</button>
-          <button id="mode-image" class="mode-btn" type="button" data-mode="image">Image Tools</button>
+          <button class="mode-btn panel-btn" type="button" data-panel="settings-panel">Settings</button>
+          <button class="mode-btn panel-btn" type="button" data-panel="pdf-workspace">PDF Toolbar</button>
+          <button class="mode-btn panel-btn" type="button" data-panel="image-workspace">Image Toolbar</button>
         </div>
       </section>
 
-      <section class="card settings">
+      <section id="settings-panel" class="card settings hidden">
         <h2>Settings</h2>
         <label class="setting-row">
           <span>Accent style</span>
@@ -39,11 +40,11 @@
         <button id="white-theme-btn" type="button" class="ghost">Use White Theme</button>
         <label class="setting-row inline">
           <input type="checkbox" id="remember-workspace" checked />
-          <span>Remember selected workspace</span>
+          <span>Remember selected panel</span>
         </label>
       </section>
 
-      <section id="pdf-workspace" class="workspace card accordion-wrap">
+      <section id="pdf-workspace" class="workspace card accordion-wrap hidden">
         <h3 class="workspace-title">PDF Toolbar</h3>
 
         <details class="tool-item" open>

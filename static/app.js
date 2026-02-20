@@ -1,7 +1,9 @@
 const statusEl = document.getElementById('status');
-const modeButtons = document.querySelectorAll('.mode-btn');
+const panelButtons = document.querySelectorAll('.panel-btn');
+const settingsPanel = document.getElementById('settings-panel');
 const pdfWorkspace = document.getElementById('pdf-workspace');
 const imageWorkspace = document.getElementById('image-workspace');
+const panels = [settingsPanel, pdfWorkspace, imageWorkspace].filter(Boolean);
 
 const previewLabel = document.getElementById('preview-label');
 const imagePreview = document.getElementById('image-preview');
@@ -14,19 +16,27 @@ const accentStyle = document.getElementById('accent-style');
 const rememberWorkspace = document.getElementById('remember-workspace');
 const whiteThemeBtn = document.getElementById('white-theme-btn');
 
-function setMode(mode, save = true) {
-  const pdfMode = mode === 'pdf';
-  pdfWorkspace.classList.toggle('hidden', !pdfMode);
-  imageWorkspace.classList.toggle('hidden', pdfMode);
+function setActivePanel(panelId, save = true) {
+  const target = document.getElementById(panelId);
+  if (!target) return;
 
-  modeButtons.forEach((btn) => {
-    btn.classList.toggle('active', btn.dataset.mode === mode);
-  });
+  const wasHidden = target.classList.contains('hidden');
+  panels.forEach((panel) => panel.classList.add('hidden'));
+  panelButtons.forEach((btn) => btn.classList.remove('active'));
 
-  resetAccordionForMode(mode);
+  if (wasHidden) {
+    target.classList.remove('hidden');
+    const activeBtn = document.querySelector(`.panel-btn[data-panel="${panelId}"]`);
+    if (activeBtn) activeBtn.classList.add('active');
 
-  if (save && rememberWorkspace.checked) {
-    localStorage.setItem('studiopdf.mode', mode);
+    if (panelId === 'pdf-workspace') resetAccordionForWorkspace(pdfWorkspace);
+    if (panelId === 'image-workspace') resetAccordionForWorkspace(imageWorkspace);
+
+    if (save && rememberWorkspace.checked) {
+      localStorage.setItem('studiopdf.panel', panelId);
+    }
+  } else if (save && rememberWorkspace.checked) {
+    localStorage.removeItem('studiopdf.panel');
   }
 }
 
@@ -43,10 +53,7 @@ function clearPreview() {
 function updatePreview(fileInput) {
   const files = Array.from(fileInput.files || []);
   clearPreview();
-
-  if (!files.length) {
-    return;
-  }
+  if (!files.length) return;
 
   previewLabel.textContent = `Selected: ${files.map((f) => f.name).join(', ')}`;
   if (previewPlaceholder) previewPlaceholder.hidden = true;
@@ -62,7 +69,6 @@ function updatePreview(fileInput) {
 
   const [file] = files;
   const url = URL.createObjectURL(file);
-
   if (file.type.startsWith('image/')) {
     imagePreview.src = url;
     imagePreview.hidden = false;
@@ -75,7 +81,6 @@ function updatePreview(fileInput) {
     multiPreview.appendChild(li);
   }
 }
-
 
 function initAccordion(scope) {
   const items = scope.querySelectorAll('.tool-item');
@@ -92,9 +97,8 @@ function initAccordion(scope) {
   });
 }
 
-function resetAccordionForMode(mode) {
-  const activeScope = mode === 'pdf' ? pdfWorkspace : imageWorkspace;
-  const items = activeScope.querySelectorAll('.tool-item');
+function resetAccordionForWorkspace(scope) {
+  const items = scope.querySelectorAll('.tool-item');
   items.forEach((item, idx) => {
     item.open = idx === 0;
   });
@@ -142,8 +146,8 @@ async function submitForm(form) {
   }
 }
 
-modeButtons.forEach((btn) => {
-  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+panelButtons.forEach((btn) => {
+  btn.addEventListener('click', () => setActivePanel(btn.dataset.panel));
 });
 
 document.querySelectorAll('input[type="file"]').forEach((input) => {
@@ -162,7 +166,7 @@ accentStyle.addEventListener('change', () => applyAccent(accentStyle.value));
 if (whiteThemeBtn) whiteThemeBtn.addEventListener('click', enableWhiteTheme);
 
 rememberWorkspace.addEventListener('change', () => {
-  if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.mode');
+  if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.panel');
 });
 
 initAccordion(pdfWorkspace);
@@ -172,11 +176,9 @@ const savedTheme = localStorage.getItem('studiopdf.accent') || 'white';
 accentStyle.value = savedTheme;
 applyAccent(savedTheme);
 
-const savedMode = localStorage.getItem('studiopdf.mode');
-if (savedMode === 'pdf' || savedMode === 'image') {
-  setMode(savedMode, false);
-}
-
-if (!(savedMode === 'pdf' || savedMode === 'image')) {
-  resetAccordionForMode('pdf');
+const savedPanel = localStorage.getItem('studiopdf.panel');
+if (savedPanel && document.getElementById(savedPanel)) {
+  setActivePanel(savedPanel, false);
+} else {
+  setActivePanel('pdf-workspace', false);
 }
