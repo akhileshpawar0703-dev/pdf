@@ -114,3 +114,29 @@ body.theme-emerald { --accent-a:#059669; --accent-b:#10b981; }
   .hero-layout { grid-template-columns:1fr; }
   .hero-home h1 { font-size:2.3rem; }
 }
+
+
+body.theme-dark {
+  --bg:#0b1020; --card:#151c33; --text:#e9f0ff; --muted:#9eb0d8; --border:#2a3f73;
+  background: radial-gradient(circle at 20% 20%, #1d2a52, var(--bg));
+}
+body.theme-dark .card,
+body.theme-dark .tool-item,
+body.theme-dark .tool-item > summary,
+body.theme-dark input,
+body.theme-dark select,
+body.theme-dark .nav-link,
+body.theme-dark .ghost,
+body.theme-dark .mode-btn {
+  background:#0f1630;
+  color:var(--text);
+  border-color:#2f4479;
+}
+body.theme-dark .tool-item form { border-top-color:#2f4479; }
+body.theme-dark .preview img, body.theme-dark .preview iframe { border-color:#2f4479; }
+body.theme-dark .workspace-title { color:#c8d8ff; }
+body.theme-dark .activity-item.info { color:#9fc0ff; }
+body.theme-dark .activity-item.success { color:#34d399; }
+body.theme-dark .activity-item.error { color:#fca5a5; }
+
+[hidden] { display:none !important; }

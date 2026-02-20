@@ -28,7 +28,7 @@
         <input id="tool-search" type="text" placeholder="Type e.g. compress, crop, merge" />
       </section>
 
-      <section id="settings-panel" class="card settings hidden">
+      <section id="settings-panel" class="card settings" hidden>
         <h2>Settings</h2>
         <label class="setting-row">
           <span>Accent style</span>
@@ -39,14 +39,23 @@
             <option value="emerald">Emerald</option>
           </select>
         </label>
+        <label class="setting-row">
+          <span>Appearance</span>
+          <select id="appearance-mode">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
         <button id="white-theme-btn" type="button" class="ghost">Use White Theme</button>
+        <button id="dark-mode-btn" type="button" class="ghost">Use Dark Mode</button>
         <label class="setting-row inline">
           <input type="checkbox" id="remember-workspace" checked />
           <span>Remember selected panel</span>
         </label>
       </section>
 
-      <section id="pdf-workspace" class="workspace card accordion-wrap hidden">
+      <section id="pdf-workspace" class="workspace card accordion-wrap" hidden>
         <div class="toolbar-head"><h3 class="workspace-title">PDF Toolbar</h3><div class="toolbar-actions"><button type="button" class="ghost toolbar-action" data-target="pdf-workspace" data-action="expand">Expand all</button><button type="button" class="ghost toolbar-action" data-target="pdf-workspace" data-action="collapse">Collapse all</button></div></div>
 
         <details class="tool-item" open>
@@ -93,7 +102,7 @@
         </details>
       </section>
 
-      <section id="image-workspace" class="workspace card accordion-wrap hidden">
+      <section id="image-workspace" class="workspace card accordion-wrap" hidden>
         <div class="toolbar-head"><h3 class="workspace-title">Image Toolbar</h3><div class="toolbar-actions"><button type="button" class="ghost toolbar-action" data-target="image-workspace" data-action="expand">Expand all</button><button type="button" class="ghost toolbar-action" data-target="image-workspace" data-action="collapse">Collapse all</button></div></div>
 
         <details class="tool-item" open>

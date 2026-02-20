@@ -64,6 +64,6 @@ python pdf_editor.py --help
 - New UI enhancement: a **Recent Actions** panel logs started/completed/failed operations with timestamps for quick feedback.
 - Added **Find a tool** search and **Expand all / Collapse all** controls in toolbars for faster navigation in larger tool sets.
 - The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
-- New UX feature: selectable accent theme (White/Blue/Violet/Emerald), optional remembered workspace, and a dedicated **Use White Theme** button in editor settings.
+- New UX feature: selectable accent theme (White/Blue/Violet/Emerald), appearance mode (System/Light/Dark), optional remembered panel, and dedicated **Use White Theme** / **Use Dark Mode** buttons in editor settings.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.
 - UI uses a clean light (white-first) visual theme for better readability.

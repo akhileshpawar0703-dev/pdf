@@ -15,6 +15,8 @@ const clearPreviewBtn = document.getElementById('clear-preview');
 const accentStyle = document.getElementById('accent-style');
 const rememberWorkspace = document.getElementById('remember-workspace');
 const whiteThemeBtn = document.getElementById('white-theme-btn');
+const darkModeBtn = document.getElementById('dark-mode-btn');
+const appearanceMode = document.getElementById('appearance-mode');
 const activityLog = document.getElementById('activity-log');
 const clearActivityBtn = document.getElementById('clear-activity');
 const toolSearch = document.getElementById('tool-search');
@@ -24,12 +26,12 @@ function setActivePanel(panelId, save = true) {
   const target = document.getElementById(panelId);
   if (!target) return;
 
-  const wasHidden = target.classList.contains('hidden');
-  panels.forEach((panel) => panel.classList.add('hidden'));
+  const wasHidden = target.hidden;
+  panels.forEach((panel) => { panel.hidden = true; });
   panelButtons.forEach((btn) => btn.classList.remove('active'));
 
   if (wasHidden) {
-    target.classList.remove('hidden');
+    target.hidden = false;
     const activeBtn = document.querySelector(`.panel-btn[data-panel="${panelId}"]`);
     if (activeBtn) activeBtn.classList.add('active');
 
@@ -130,6 +132,23 @@ function setToolbarOpenState(workspaceId, expand) {
   });
 }
 
+function applyAppearance(mode) {
+  document.body.classList.remove('theme-dark');
+  let resolved = mode;
+  if (mode === 'system') {
+    resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  if (resolved === 'dark') {
+    document.body.classList.add('theme-dark');
+  }
+  localStorage.setItem('studiopdf.appearance', mode);
+}
+
+function enableDarkTheme() {
+  if (appearanceMode) appearanceMode.value = 'dark';
+  applyAppearance('dark');
+}
+
 function applyAccent(theme) {
   document.body.classList.remove('theme-violet', 'theme-emerald', 'theme-white');
   if (theme === 'violet') document.body.classList.add('theme-violet');
@@ -216,6 +235,8 @@ document.querySelectorAll('form[data-endpoint]').forEach((form) => {
 clearPreviewBtn.addEventListener('click', clearPreview);
 accentStyle.addEventListener('change', () => applyAccent(accentStyle.value));
 if (whiteThemeBtn) whiteThemeBtn.addEventListener('click', enableWhiteTheme);
+if (darkModeBtn) darkModeBtn.addEventListener('click', enableDarkTheme);
+if (appearanceMode) appearanceMode.addEventListener('change', () => applyAppearance(appearanceMode.value));
 if (clearActivityBtn) clearActivityBtn.addEventListener('click', clearActivityLog);
 if (toolSearch) toolSearch.addEventListener('input', () => filterTools(toolSearch.value));
 toolbarActionButtons.forEach((btn) => {
@@ -231,6 +252,10 @@ rememberWorkspace.addEventListener('change', () => {
 
 initAccordion(pdfWorkspace);
 initAccordion(imageWorkspace);
+
+const savedAppearance = localStorage.getItem('studiopdf.appearance') || 'system';
+if (appearanceMode) appearanceMode.value = savedAppearance;
+applyAppearance(savedAppearance);
 
 const savedTheme = localStorage.getItem('studiopdf.accent') || 'white';
 accentStyle.value = savedTheme;
