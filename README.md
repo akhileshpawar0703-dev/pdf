@@ -15,7 +15,7 @@ StudioPDF is a modern editing toolkit that combines:
 - Reorder pages
 - Encrypt/decrypt
 - Metadata show/set
-- Basic PDF compression (stream rewrite)
+- Basic PDF compression (stream rewrite + object deduplication when supported)
 - Convert images to PDF
 
 ### Image features
@@ -59,8 +59,8 @@ python pdf_editor.py --help
 
 ## UI Flow
 
-- The main app now uses a split layout: **left side preview**, **right side toolbar + settings**.
-- On the right side, choose **PDF Tools** or **Image Tools**; only the selected workspace is shown.
-- On the left side, preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
+- The editor now uses a split layout: **left side accordion toolbar + settings**, **right side live preview**.
+- Tools are listed one-by-one and expand to show settings + action button for the selected operation.
+- The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
 - New UX feature: selectable accent theme (Blue/Violet/Emerald) and optional remembered workspace.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.

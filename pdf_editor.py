@@ -177,6 +177,25 @@ def decrypt_pdf(input_path: Path, output_path: Path, password: str) -> None:
     write_output(writer, output_path)
 
 
+def compress_pdf(input_path: Path, output_path: Path) -> None:
+    """Compress a PDF by rewriting streams and deduplicating objects when possible."""
+    _ensure_pdf_backend()
+    reader = PdfReader(str(input_path))
+    if reader.is_encrypted:
+        raise ValueError("Cannot compress encrypted PDF. Decrypt first.")
+
+    writer = PdfWriter()
+    for page in reader.pages:
+        if hasattr(page, "compress_content_streams"):
+            page.compress_content_streams()
+        writer.add_page(page)
+
+    if hasattr(writer, "compress_identical_objects"):
+        writer.compress_identical_objects(remove_identicals=True, remove_orphans=True)
+
+    write_output(writer, output_path)
+
+
 def show_metadata(input_path: Path) -> None:
     _ensure_pdf_backend()
     reader = PdfReader(str(input_path))

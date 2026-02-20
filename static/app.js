@@ -22,6 +22,8 @@ function setMode(mode, save = true) {
     btn.classList.toggle('active', btn.dataset.mode === mode);
   });
 
+  resetAccordionForMode(mode);
+
   if (save && rememberWorkspace.checked) {
     localStorage.setItem('studiopdf.mode', mode);
   }
@@ -71,6 +73,27 @@ function updatePreview(fileInput) {
     li.textContent = file.name;
     multiPreview.appendChild(li);
   }
+}
+
+
+function initAccordion(scope) {
+  const items = scope.querySelectorAll('.accordion-item');
+  items.forEach((item) => {
+    const trigger = item.querySelector('.accordion-trigger');
+    if (!trigger.dataset.bound) {
+      trigger.addEventListener('click', () => {
+        items.forEach((other) => other.classList.remove('open'));
+        item.classList.add('open');
+      });
+      trigger.dataset.bound = '1';
+    }
+  });
+}
+
+function resetAccordionForMode(mode) {
+  const activeScope = mode === 'pdf' ? pdfWorkspace : imageWorkspace;
+  const items = activeScope.querySelectorAll('.accordion-item');
+  items.forEach((item, idx) => item.classList.toggle('open', idx === 0));
 }
 
 function applyAccent(theme) {
@@ -130,6 +153,9 @@ rememberWorkspace.addEventListener('change', () => {
   if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.mode');
 });
 
+initAccordion(pdfWorkspace);
+initAccordion(imageWorkspace);
+
 const savedTheme = localStorage.getItem('studiopdf.accent') || 'blue';
 accentStyle.value = savedTheme;
 applyAccent(savedTheme);
@@ -137,4 +163,8 @@ applyAccent(savedTheme);
 const savedMode = localStorage.getItem('studiopdf.mode');
 if (savedMode === 'pdf' || savedMode === 'image') {
   setMode(savedMode, false);
+}
+
+if (!(savedMode === 'pdf' || savedMode === 'image')) {
+  resetAccordionForMode('pdf');
 }

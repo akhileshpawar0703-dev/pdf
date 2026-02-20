@@ -11,27 +11,12 @@
   <div class="bg-orb orb-2"></div>
   <header class="hero">
     <div class="top-nav"><a class="nav-link" href="/">← Home</a><a class="nav-link" href="/editor">Editor</a></div>
-    <h1>StudioPDF</h1>
-    <p>Preview on the left. Tools and settings on the right.</p>
+    <h1>StudioPDF Editor</h1>
+    <p>Left toolbar with expandable tools. Right side live preview.</p>
   </header>
 
-  <main class="container split-layout">
-    <section class="left-pane card preview">
-      <div class="pane-head">
-        <h2>Live Preview</h2>
-        <button id="clear-preview" type="button" class="ghost">Clear</button>
-      </div>
-      <p id="preview-label">Select a file from any tool to preview it here.</p>
-      <div class="preview-placeholder" id="preview-placeholder">
-        <img src="/static/images/toolkit-image.svg" alt="preview placeholder" />
-        <span>Live preview appears here</span>
-      </div>
-      <img id="image-preview" alt="Image preview" hidden />
-      <iframe id="pdf-preview" title="PDF preview" hidden></iframe>
-      <ul id="multi-preview"></ul>
-    </section>
-
-    <section class="right-pane">
+  <main class="container split-layout editor-layout">
+    <section class="left-pane toolbar-pane">
       <section class="card mode-switch">
         <h2>Workspace</h2>
         <div class="mode-buttons">
@@ -56,49 +41,57 @@
         </label>
       </section>
 
-      <section id="pdf-workspace" class="workspace">
+      <section id="pdf-workspace" class="workspace card accordion-wrap">
         <h3 class="workspace-title">PDF Toolbar</h3>
-        <div class="tool-grid">
-          <section class="card tool-card">
-            <h2>PDF Merge</h2>
+
+        <article class="accordion-item open">
+          <button class="accordion-trigger" type="button">PDF Merge</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/pdf/merge">
               <input type="file" name="files" accept="application/pdf" multiple required />
               <button>Merge PDFs</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>PDF Extract Pages</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">PDF Extract Pages</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/pdf/extract">
               <input type="file" name="file" accept="application/pdf" required />
               <input type="text" name="pages" placeholder="e.g. 1,3-5,8-" required />
               <button>Extract</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>PDF Compress</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">PDF Compress</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/pdf/compress">
               <input type="file" name="file" accept="application/pdf" required />
               <button>Compress PDF</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>Convert Images to PDF</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">Convert Images to PDF</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/pdf/convert/image-to-pdf">
               <input type="file" name="images" accept="image/*" multiple required />
               <button>Create PDF</button>
             </form>
-          </section>
-        </div>
+          </div>
+        </article>
       </section>
 
-      <section id="image-workspace" class="workspace hidden">
+      <section id="image-workspace" class="workspace card accordion-wrap hidden">
         <h3 class="workspace-title">Image Toolbar</h3>
-        <div class="tool-grid">
-          <section class="card tool-card">
-            <h2>Image Resizer</h2>
+
+        <article class="accordion-item open">
+          <button class="accordion-trigger" type="button">Image Resizer</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/image/resize">
               <input type="file" name="file" accept="image/*" required />
               <div class="row">
@@ -110,19 +103,23 @@
               </select>
               <button>Resize</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>Image Compressor</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">Image Compressor</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/image/compress">
               <input type="file" name="file" accept="image/*" required />
               <input type="number" name="quality" min="10" max="95" value="75" />
               <button>Compress</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>Image Crop</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">Image Crop</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/image/crop">
               <input type="file" name="file" accept="image/*" required />
               <div class="row">
@@ -138,10 +135,12 @@
               </select>
               <button>Crop</button>
             </form>
-          </section>
+          </div>
+        </article>
 
-          <section class="card tool-card">
-            <h2>Image Converter</h2>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button">Image Converter</button>
+          <div class="accordion-panel">
             <form data-endpoint="/api/image/convert">
               <input type="file" name="file" accept="image/*" required />
               <select name="format">
@@ -149,13 +148,28 @@
               </select>
               <button>Convert</button>
             </form>
-          </section>
-        </div>
+          </div>
+        </article>
       </section>
+    </section>
+
+    <section class="right-pane card preview">
+      <div class="pane-head">
+        <h2>Live Preview</h2>
+        <button id="clear-preview" type="button" class="ghost">Clear</button>
+      </div>
+      <p id="preview-label">Select a file from any tool to preview it here.</p>
+      <div class="preview-placeholder" id="preview-placeholder">
+        <img src="/static/images/toolkit-image.svg" alt="preview placeholder" />
+        <span>Live preview appears here</span>
+      </div>
+      <img id="image-preview" alt="Image preview" hidden />
+      <iframe id="pdf-preview" title="PDF preview" hidden></iframe>
+      <ul id="multi-preview"></ul>
+      <p id="status"></p>
     </section>
   </main>
 
-  <p id="status"></p>
   <script src="/static/app.js"></script>
 </body>
 </html>

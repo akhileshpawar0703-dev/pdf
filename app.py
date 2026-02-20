@@ -71,20 +71,10 @@ def api_pdf_compress():
     if not file:
         return jsonify({"error": "file is required."}), 400
 
-    pdf_editor._ensure_pdf_backend()
     inp = _save_upload(file, ".pdf")
     out = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name)
 
-    reader = pdf_editor.PdfReader(str(inp))
-    writer = pdf_editor.PdfWriter()
-    for page in reader.pages:
-        if hasattr(page, "compress_content_streams"):
-            page.compress_content_streams()
-        writer.add_page(page)
-    writer.add_metadata({})
-    with out.open("wb") as fh:
-        writer.write(fh)
-
+    pdf_editor.compress_pdf(inp, out)
     return _download(out, "compressed.pdf")
 
 
