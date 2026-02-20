@@ -64,3 +64,4 @@ python pdf_editor.py --help
 - The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
 - New UX feature: selectable accent theme (Blue/Violet/Emerald) and optional remembered workspace.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.
+- UI uses a clean light (white-first) visual theme for better readability.
