@@ -78,13 +78,17 @@
         <details class="tool-item">
           <summary>PDF Compress</summary>
           <form data-endpoint="/api/pdf/compress">
+            <label>PDF file</label>
             <input type="file" name="file" accept="application/pdf" required />
+            <p class="input-help file-size-hint" data-for="file">Current size: -</p>
             <label>Compression level</label>
             <select name="level">
               <option value="low">Low (rewrite only)</option>
               <option value="standard" selected>Standard (recommended)</option>
               <option value="high">High (max compression)</option>
             </select>
+            <label>Target size (KB, optional)</label>
+            <input type="number" name="target_kb" min="1" placeholder="e.g. 1024 for ~1MB" />
             <label class="setting-row inline">
               <input type="checkbox" name="strip_metadata" value="true" />
               <span>Strip metadata</span>
@@ -123,8 +127,13 @@
         <details class="tool-item">
           <summary>Image Compressor</summary>
           <form data-endpoint="/api/image/compress">
+            <label>Image file</label>
             <input type="file" name="file" accept="image/*" required />
+            <p class="input-help file-size-hint" data-for="file">Current size: -</p>
+            <label>Quality (10-95)</label>
             <input type="number" name="quality" min="10" max="95" value="75" />
+            <label>Target size (KB, optional)</label>
+            <input type="number" name="target_kb" min="1" placeholder="e.g. 300" />
             <button>Compress</button>
           </form>
         </details>

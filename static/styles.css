@@ -37,6 +37,7 @@ body { margin:0; background: radial-gradient(circle at 10% 0%, #eef4ff, var(--bg
 
 .setting-row { display:flex; justify-content:space-between; align-items:center; gap:.8rem; }
 .setting-row.inline { justify-content:flex-start; }
+.input-help { margin:0; font-size:.82rem; color:var(--muted); }
 .workspace-title { margin:.1rem 0 .8rem; color:#30476f; }
 form { display:flex; flex-direction:column; gap:.6rem; }
 input,select,button { border-radius:10px; border:1px solid #c7d5f0; padding:.65rem .7rem; background:#fff; color:var(--text); }

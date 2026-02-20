@@ -15,12 +15,12 @@ StudioPDF is a modern editing toolkit that combines:
 - Reorder pages
 - Encrypt/decrypt
 - Metadata show/set
-- Basic PDF compression with configurable level (low/standard/high) and optional metadata stripping
+- Basic PDF compression with configurable level (low/standard/high), optional metadata stripping, and optional target size (KB)
 - Convert images to PDF
 
 ### Image features
 - Resize
-- Compress (quality-based JPEG optimization)
+- Compress (quality-based JPEG optimization) with optional target size (KB)
 - Convert formats (PNG/JPEG/WEBP/BMP)
 - Crop images with custom bounds (left/top/right/bottom)
 
@@ -63,6 +63,7 @@ python pdf_editor.py --help
 - Click panel buttons (Settings / PDF Toolbar / Image Toolbar) to show that panel; tool sections inside each toolbar expand natively to reveal options.
 - New UI enhancement: a **Recent Actions** panel logs started/completed/failed operations with timestamps for quick feedback.
 - Added **Find a tool** search and **Expand all / Collapse all** controls in toolbars for faster navigation in larger tool sets.
+- Compression forms now show **Current size**, accept optional **Target size (KB)**, and return clearer validation errors for invalid values/unreachable targets.
 - The right-side preview updates from selected files (image preview, embedded PDF preview, or multi-file list).
 - New UX feature: selectable accent theme (White/Blue/Violet/Emerald), appearance mode (System/Light/Dark), optional remembered panel, and dedicated **Use White Theme** / **Use Dark Mode** buttons in editor settings.
 - Home page includes visual illustrations, animated decorative elements, and interactive feature cards for a more polished look.

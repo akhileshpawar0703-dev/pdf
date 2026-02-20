@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List
@@ -177,24 +178,7 @@ def decrypt_pdf(input_path: Path, output_path: Path, password: str) -> None:
     write_output(writer, output_path)
 
 
-def compress_pdf(
-    input_path: Path,
-    output_path: Path,
-    level: str = "standard",
-    strip_metadata: bool = False,
-) -> None:
-    """Compress a PDF with tunable levels.
-
-    Levels:
-    - low: rewrite only
-    - standard: rewrite + stream compression
-    - high: rewrite + stream compression + object dedup
-    """
-    _ensure_pdf_backend()
-    level = (level or "standard").lower()
-    if level not in {"low", "standard", "high"}:
-        raise ValueError("Compression level must be one of: low, standard, high.")
-
+def _compress_pdf_once(input_path: Path, output_path: Path, level: str, strip_metadata: bool) -> int:
     reader = PdfReader(str(input_path))
     if reader.is_encrypted:
         raise ValueError("Cannot compress encrypted PDF. Decrypt first.")
@@ -213,6 +197,62 @@ def compress_pdf(
         writer.add_metadata({})
 
     write_output(writer, output_path)
+    return output_path.stat().st_size
+
+
+def compress_pdf(
+    input_path: Path,
+    output_path: Path,
+    level: str = "standard",
+    strip_metadata: bool = False,
+    target_kb: int | None = None,
+) -> int:
+    """Compress a PDF with tunable levels and optional target-size guidance."""
+    _ensure_pdf_backend()
+    level = (level or "standard").lower()
+    if level not in {"low", "standard", "high"}:
+        raise ValueError("Compression level must be one of: low, standard, high.")
+    if target_kb is not None and target_kb <= 0:
+        raise ValueError("target_kb must be greater than 0.")
+
+    candidates = [(level, strip_metadata), ("high", True), ("high", False), ("standard", True)]
+    # keep order, unique
+    seen = set()
+    plan = []
+    for c in candidates:
+        if c not in seen:
+            seen.add(c)
+            plan.append(c)
+
+    best_size = None
+    best_file = None
+    target_bytes = target_kb * 1024 if target_kb else None
+
+    with tempfile.TemporaryDirectory() as td:
+        tdp = Path(td)
+        for idx, (cur_level, cur_strip) in enumerate(plan):
+            out = tdp / f"attempt_{idx}.pdf"
+            size = _compress_pdf_once(input_path, out, cur_level, cur_strip)
+
+            if best_size is None or size < best_size:
+                best_size = size
+                best_file = out
+
+            if target_bytes and size <= target_bytes:
+                output_path.write_bytes(out.read_bytes())
+                return size
+
+        if best_file is None:
+            raise ValueError("Compression failed to produce an output file.")
+
+        output_path.write_bytes(best_file.read_bytes())
+
+    if target_bytes and best_size and best_size > target_bytes:
+        raise ValueError(
+            f"Could not reach target size ({target_kb} KB). Smallest result is {best_size / 1024:.1f} KB."
+        )
+
+    return int(best_size or output_path.stat().st_size)
 
 
 def show_metadata(input_path: Path) -> None:

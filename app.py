@@ -70,14 +70,24 @@ def api_pdf_compress():
     file = request.files.get("file")
     level = (request.form.get("level") or "standard").lower()
     strip_metadata = (request.form.get("strip_metadata") or "false").lower() in {"1", "true", "yes", "on"}
+    target_kb_raw = (request.form.get("target_kb") or "").strip()
     if not file:
         return jsonify({"error": "file is required."}), 400
+
+    try:
+        target_kb = int(target_kb_raw) if target_kb_raw else None
+    except ValueError:
+        return jsonify({"error": "target_kb must be an integer."}), 400
 
     inp = _save_upload(file, ".pdf")
     out = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name)
 
-    pdf_editor.compress_pdf(inp, out, level=level, strip_metadata=strip_metadata)
-    return _download(out, "compressed.pdf")
+    original_size = inp.stat().st_size
+    output_size = pdf_editor.compress_pdf(inp, out, level=level, strip_metadata=strip_metadata, target_kb=target_kb)
+    response = _download(out, "compressed.pdf")
+    response.headers["X-Original-Size"] = str(original_size)
+    response.headers["X-Output-Size"] = str(output_size)
+    return response
 
 
 @app.post("/api/pdf/convert/image-to-pdf")
@@ -124,18 +134,50 @@ def api_image_resize():
 def api_image_compress():
     Image = _require_pillow()
     file = request.files.get("file")
-    quality = int(request.form.get("quality", "75"))
+    target_kb_raw = (request.form.get("target_kb") or "").strip()
+    try:
+        quality = int(request.form.get("quality", "75"))
+    except ValueError:
+        return jsonify({"error": "quality must be an integer."}), 400
     if not file:
         return jsonify({"error": "file is required."}), 400
 
     quality = max(10, min(95, quality))
+    try:
+        target_kb = int(target_kb_raw) if target_kb_raw else None
+    except ValueError:
+        return jsonify({"error": "target_kb must be an integer."}), 400
+
     inp = _save_upload(file)
     img = Image.open(inp).convert("RGB")
+    original_size = inp.stat().st_size
 
-    out = io.BytesIO()
-    img.save(out, format="JPEG", optimize=True, quality=quality)
+    def render(q: int) -> bytes:
+        out_buf = io.BytesIO()
+        img.save(out_buf, format="JPEG", optimize=True, quality=q)
+        return out_buf.getvalue()
+
+    best = render(quality)
+    if target_kb:
+        target_bytes = target_kb * 1024
+        q = quality
+        while len(best) > target_bytes and q > 15:
+            q -= 5
+            candidate = render(q)
+            if len(candidate) <= len(best):
+                best = candidate
+
+        if len(best) > target_bytes:
+            return jsonify({
+                "error": f"Could not reach target size {target_kb} KB. Smallest result is {len(best)/1024:.1f} KB."
+            }), 400
+
+    out = io.BytesIO(best)
     out.seek(0)
-    return send_file(out, as_attachment=True, download_name="compressed.jpg", mimetype="image/jpeg")
+    response = send_file(out, as_attachment=True, download_name="compressed.jpg", mimetype="image/jpeg")
+    response.headers["X-Original-Size"] = str(original_size)
+    response.headers["X-Output-Size"] = str(len(best))
+    return response
 
 
 

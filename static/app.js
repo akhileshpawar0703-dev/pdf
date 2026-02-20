@@ -185,6 +185,33 @@ function clearActivityLog() {
   activityLog.innerHTML = '<li class="muted">No actions yet.</li>';
 }
 
+function formatBytes(n) {
+  const size = Number(n || 0);
+  if (!size) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  let v = size;
+  while (v >= 1024 && i < units.length - 1) {
+    v /= 1024;
+    i += 1;
+  }
+  return `${v.toFixed(v >= 100 || i === 0 ? 0 : 1)} ${units[i]}`;
+}
+
+function updateFileSizeHint(fileInput) {
+  const form = fileInput.closest('form');
+  if (!form) return;
+  const hint = form.querySelector(`.file-size-hint[data-for="${fileInput.name}"]`);
+  if (!hint) return;
+  const files = Array.from(fileInput.files || []);
+  if (!files.length) {
+    hint.textContent = 'Current size: -';
+    return;
+  }
+  const total = files.reduce((acc, f) => acc + f.size, 0);
+  hint.textContent = `Current size: ${formatBytes(total)}`;
+}
+
 async function submitForm(form) {
   const endpoint = form.dataset.endpoint;
   const formData = new FormData(form);
@@ -194,8 +221,16 @@ async function submitForm(form) {
   try {
     const res = await fetch(endpoint, { method: 'POST', body: formData });
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || 'Request failed');
+      let message = 'Request failed';
+      const ctype = res.headers.get('content-type') || '';
+      if (ctype.includes('application/json')) {
+        const err = await res.json();
+        message = err.error || message;
+      } else {
+        const txt = await res.text();
+        if (txt) message = txt;
+      }
+      throw new Error(message);
     }
 
     const blob = await res.blob();
@@ -209,8 +244,15 @@ async function submitForm(form) {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
-    statusEl.textContent = 'Done. Download started.';
-    addActivity(`Completed ${endpoint} → ${filename}`, 'success');
+    const inSize = res.headers.get('X-Original-Size');
+    const outSize = res.headers.get('X-Output-Size');
+    if (inSize && outSize) {
+      statusEl.textContent = `Done. ${formatBytes(inSize)} → ${formatBytes(outSize)}. Download started.`;
+      addActivity(`Completed ${endpoint} → ${filename} (${formatBytes(inSize)} → ${formatBytes(outSize)})`, 'success');
+    } else {
+      statusEl.textContent = 'Done. Download started.';
+      addActivity(`Completed ${endpoint} → ${filename}`, 'success');
+    }
   } catch (e) {
     statusEl.textContent = `Error: ${e.message}`;
     addActivity(`Failed ${endpoint}: ${e.message}`, 'error');
@@ -222,7 +264,7 @@ panelButtons.forEach((btn) => {
 });
 
 document.querySelectorAll('input[type="file"]').forEach((input) => {
-  input.addEventListener('change', () => updatePreview(input));
+  input.addEventListener('change', () => { updatePreview(input); updateFileSizeHint(input); });
 });
 
 document.querySelectorAll('form[data-endpoint]').forEach((form) => {
