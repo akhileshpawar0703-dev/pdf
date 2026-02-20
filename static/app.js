@@ -15,6 +15,8 @@ const clearPreviewBtn = document.getElementById('clear-preview');
 const accentStyle = document.getElementById('accent-style');
 const rememberWorkspace = document.getElementById('remember-workspace');
 const whiteThemeBtn = document.getElementById('white-theme-btn');
+const activityLog = document.getElementById('activity-log');
+const clearActivityBtn = document.getElementById('clear-activity');
 
 function setActivePanel(panelId, save = true) {
   const target = document.getElementById(panelId);
@@ -117,10 +119,34 @@ function enableWhiteTheme() {
   applyAccent('white');
 }
 
+
+function addActivity(message, kind = 'info') {
+  if (!activityLog) return;
+  const empty = activityLog.querySelector('.muted');
+  if (empty) empty.remove();
+
+  const li = document.createElement('li');
+  li.className = `activity-item ${kind}`;
+  const stamp = new Date().toLocaleTimeString();
+  li.textContent = `[${stamp}] ${message}`;
+  activityLog.prepend(li);
+
+  const maxItems = 8;
+  while (activityLog.children.length > maxItems) {
+    activityLog.removeChild(activityLog.lastElementChild);
+  }
+}
+
+function clearActivityLog() {
+  if (!activityLog) return;
+  activityLog.innerHTML = '<li class="muted">No actions yet.</li>';
+}
+
 async function submitForm(form) {
   const endpoint = form.dataset.endpoint;
   const formData = new FormData(form);
   statusEl.textContent = 'Processing...';
+  addActivity(`Started ${endpoint}`, 'info');
 
   try {
     const res = await fetch(endpoint, { method: 'POST', body: formData });
@@ -141,8 +167,10 @@ async function submitForm(form) {
     a.click();
     URL.revokeObjectURL(url);
     statusEl.textContent = 'Done. Download started.';
+    addActivity(`Completed ${endpoint} → ${filename}`, 'success');
   } catch (e) {
     statusEl.textContent = `Error: ${e.message}`;
+    addActivity(`Failed ${endpoint}: ${e.message}`, 'error');
   }
 }
 
@@ -164,6 +192,7 @@ document.querySelectorAll('form[data-endpoint]').forEach((form) => {
 clearPreviewBtn.addEventListener('click', clearPreview);
 accentStyle.addEventListener('change', () => applyAccent(accentStyle.value));
 if (whiteThemeBtn) whiteThemeBtn.addEventListener('click', enableWhiteTheme);
+if (clearActivityBtn) clearActivityBtn.addEventListener('click', clearActivityLog);
 
 rememberWorkspace.addEventListener('change', () => {
   if (!rememberWorkspace.checked) localStorage.removeItem('studiopdf.panel');

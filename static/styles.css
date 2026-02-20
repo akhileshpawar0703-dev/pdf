@@ -54,6 +54,14 @@ button:hover { filter:brightness(1.04); transform: translateY(-1px); }
 .preview-placeholder { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.55rem; border:1px dashed #c0d1ef; border-radius:12px; padding:1rem; color:var(--muted); margin-top:.55rem; }
 .preview-placeholder img { width:70px; height:70px; opacity:.9; }
 
+.activity-log { margin:0; padding-left:1.1rem; display:grid; gap:.4rem; }
+.muted { color:var(--muted); }
+.activity-item { font-size:.9rem; }
+.activity-item.success { color:#0f766e; }
+.activity-item.error { color:#b91c1c; }
+.activity-item.info { color:#30476f; }
+
+
 body.theme-white { --accent-a:#ffffff; --accent-b:#f3f6fb; }
 body.theme-white button,
 body.theme-white .mode-btn.active,

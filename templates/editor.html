@@ -150,21 +150,34 @@
       </section>
     </section>
 
-    <section class="right-pane card preview">
-      <div class="pane-head">
-        <h2>Live Preview</h2>
-        <button id="clear-preview" type="button" class="ghost">Clear</button>
-      </div>
-      <p id="preview-label">Select a file from any tool to preview it here.</p>
-      <div class="preview-placeholder" id="preview-placeholder">
-        <img src="/static/images/toolkit-image.svg" alt="preview placeholder" />
-        <span>Live preview appears here</span>
-      </div>
-      <img id="image-preview" alt="Image preview" hidden />
-      <iframe id="pdf-preview" title="PDF preview" hidden></iframe>
-      <ul id="multi-preview"></ul>
-      <p id="status"></p>
+    <section class="right-pane">
+      <section class="card preview">
+        <div class="pane-head">
+          <h2>Live Preview</h2>
+          <button id="clear-preview" type="button" class="ghost">Clear</button>
+        </div>
+        <p id="preview-label">Select a file from any tool to preview it here.</p>
+        <div class="preview-placeholder" id="preview-placeholder">
+          <img src="/static/images/toolkit-image.svg" alt="preview placeholder" />
+          <span>Live preview appears here</span>
+        </div>
+        <img id="image-preview" alt="Image preview" hidden />
+        <iframe id="pdf-preview" title="PDF preview" hidden></iframe>
+        <ul id="multi-preview"></ul>
+        <p id="status"></p>
+      </section>
+
+      <section class="card activity-panel">
+        <div class="pane-head">
+          <h2>Recent Actions</h2>
+          <button id="clear-activity" type="button" class="ghost">Clear Log</button>
+        </div>
+        <ul id="activity-log" class="activity-log">
+          <li class="muted">No actions yet.</li>
+        </ul>
+      </section>
     </section>
+
   </main>
 
   <script src="/static/app.js"></script>
