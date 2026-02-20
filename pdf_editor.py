@@ -177,21 +177,40 @@ def decrypt_pdf(input_path: Path, output_path: Path, password: str) -> None:
     write_output(writer, output_path)
 
 
-def compress_pdf(input_path: Path, output_path: Path) -> None:
-    """Compress a PDF by rewriting streams and deduplicating objects when possible."""
+def compress_pdf(
+    input_path: Path,
+    output_path: Path,
+    level: str = "standard",
+    strip_metadata: bool = False,
+) -> None:
+    """Compress a PDF with tunable levels.
+
+    Levels:
+    - low: rewrite only
+    - standard: rewrite + stream compression
+    - high: rewrite + stream compression + object dedup
+    """
     _ensure_pdf_backend()
+    level = (level or "standard").lower()
+    if level not in {"low", "standard", "high"}:
+        raise ValueError("Compression level must be one of: low, standard, high.")
+
     reader = PdfReader(str(input_path))
     if reader.is_encrypted:
         raise ValueError("Cannot compress encrypted PDF. Decrypt first.")
 
     writer = PdfWriter()
     for page in reader.pages:
-        if hasattr(page, "compress_content_streams"):
-            page.compress_content_streams()
         writer.add_page(page)
+        added_page = writer.pages[-1]
+        if level in {"standard", "high"} and hasattr(added_page, "compress_content_streams"):
+            added_page.compress_content_streams()
 
-    if hasattr(writer, "compress_identical_objects"):
+    if level == "high" and hasattr(writer, "compress_identical_objects"):
         writer.compress_identical_objects(remove_identicals=True, remove_orphans=True)
+
+    if strip_metadata:
+        writer.add_metadata({})
 
     write_output(writer, output_path)
 

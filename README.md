@@ -15,7 +15,7 @@ StudioPDF is a modern editing toolkit that combines:
 - Reorder pages
 - Encrypt/decrypt
 - Metadata show/set
-- Basic PDF compression (stream rewrite + object deduplication when supported)
+- Basic PDF compression with configurable level (low/standard/high) and optional metadata stripping
 - Convert images to PDF
 
 ### Image features
@@ -41,7 +41,7 @@ Editor: `http://localhost:8000/editor`
 
 - `POST /api/pdf/merge`
 - `POST /api/pdf/extract`
-- `POST /api/pdf/compress`
+- `POST /api/pdf/compress` (supports `level=low|standard|high` and optional `strip_metadata=true`)
 - `POST /api/pdf/convert/image-to-pdf`
 - `POST /api/image/resize`
 - `POST /api/image/compress`

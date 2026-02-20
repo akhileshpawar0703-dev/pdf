@@ -68,13 +68,15 @@ def api_pdf_extract():
 @app.post("/api/pdf/compress")
 def api_pdf_compress():
     file = request.files.get("file")
+    level = (request.form.get("level") or "standard").lower()
+    strip_metadata = (request.form.get("strip_metadata") or "false").lower() in {"1", "true", "yes", "on"}
     if not file:
         return jsonify({"error": "file is required."}), 400
 
     inp = _save_upload(file, ".pdf")
     out = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name)
 
-    pdf_editor.compress_pdf(inp, out)
+    pdf_editor.compress_pdf(inp, out, level=level, strip_metadata=strip_metadata)
     return _download(out, "compressed.pdf")
 
 

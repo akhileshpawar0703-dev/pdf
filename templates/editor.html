@@ -67,6 +67,16 @@
           <summary>PDF Compress</summary>
           <form data-endpoint="/api/pdf/compress">
             <input type="file" name="file" accept="application/pdf" required />
+            <label>Compression level</label>
+            <select name="level">
+              <option value="low">Low (rewrite only)</option>
+              <option value="standard" selected>Standard (recommended)</option>
+              <option value="high">High (max compression)</option>
+            </select>
+            <label class="setting-row inline">
+              <input type="checkbox" name="strip_metadata" value="true" />
+              <span>Strip metadata</span>
+            </label>
             <button>Compress PDF</button>
           </form>
         </details>
