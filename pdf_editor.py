@@ -4,6 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import importlib
+import importlib.util
+import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -18,13 +21,20 @@ def _ensure_pdf_backend() -> None:
     global PdfReader, PdfWriter
     if PdfReader is not None and PdfWriter is not None:
         return
-    try:
-        from pypdf import PdfReader as _PdfReader, PdfWriter as _PdfWriter
-    except ModuleNotFoundError as exc:
-        raise RuntimeError(
-            "Missing dependency: install with `pip install -r requirements.txt` to enable PDF operations."
-        ) from exc
-    PdfReader, PdfWriter = _PdfReader, _PdfWriter
+
+    if importlib.util.find_spec("pypdf") is None:
+        install = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "pypdf>=4.0.0"],
+            capture_output=True,
+            text=True,
+        )
+        if install.returncode != 0 or importlib.util.find_spec("pypdf") is None:
+            raise RuntimeError(
+                "Missing dependency: could not auto-install `pypdf`. Run `pip install -r requirements.txt`."
+            )
+
+    module = importlib.import_module("pypdf")
+    PdfReader, PdfWriter = module.PdfReader, module.PdfWriter
 
 
 @dataclass(frozen=True)

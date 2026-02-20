@@ -41,7 +41,7 @@ Editor: `http://localhost:8000/editor`
 
 - `POST /api/pdf/merge`
 - `POST /api/pdf/extract`
-- `POST /api/pdf/compress` (supports `level=low|standard|high` and optional `strip_metadata=true`)
+- `POST /api/pdf/compress` (supports `level=low|standard|high`, optional `strip_metadata=true`, `target_kb`, and `X-Compression-Warning` fallback header when backend is unavailable)
 - `POST /api/pdf/convert/image-to-pdf`
 - `POST /api/image/resize`
 - `POST /api/image/compress`

@@ -246,12 +246,15 @@ async function submitForm(form) {
     URL.revokeObjectURL(url);
     const inSize = res.headers.get('X-Original-Size');
     const outSize = res.headers.get('X-Output-Size');
+    const compressWarning = res.headers.get('X-Compression-Warning');
     if (inSize && outSize) {
       statusEl.textContent = `Done. ${formatBytes(inSize)} → ${formatBytes(outSize)}. Download started.`;
       addActivity(`Completed ${endpoint} → ${filename} (${formatBytes(inSize)} → ${formatBytes(outSize)})`, 'success');
+      if (compressWarning) addActivity(compressWarning, 'error');
     } else {
       statusEl.textContent = 'Done. Download started.';
       addActivity(`Completed ${endpoint} → ${filename}`, 'success');
+      if (compressWarning) addActivity(compressWarning, 'error');
     }
   } catch (e) {
     statusEl.textContent = `Error: ${e.message}`;

@@ -83,7 +83,19 @@ def api_pdf_compress():
     out = Path(tempfile.NamedTemporaryFile(delete=False, suffix=".pdf").name)
 
     original_size = inp.stat().st_size
-    output_size = pdf_editor.compress_pdf(inp, out, level=level, strip_metadata=strip_metadata, target_kb=target_kb)
+    try:
+        output_size = pdf_editor.compress_pdf(inp, out, level=level, strip_metadata=strip_metadata, target_kb=target_kb)
+    except RuntimeError as exc:
+        if "Missing dependency" in str(exc):
+            out.write_bytes(inp.read_bytes())
+            output_size = out.stat().st_size
+            response = _download(out, "compressed.pdf")
+            response.headers["X-Original-Size"] = str(original_size)
+            response.headers["X-Output-Size"] = str(output_size)
+            response.headers["X-Compression-Warning"] = "PDF backend unavailable; returned original file."
+            return response
+        raise
+
     response = _download(out, "compressed.pdf")
     response.headers["X-Original-Size"] = str(original_size)
     response.headers["X-Output-Size"] = str(output_size)
