@@ -1,0 +1,133 @@
+:root {
+  --bg: #eef1f7;
+  --toolbar: #1f2937;
+  --panel: #111827;
+  --text: #f9fafb;
+  --text-dark: #111827;
+  --accent: #2563eb;
+  --surface: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text-dark);
+}
+
+.app-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--toolbar);
+  color: var(--text);
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button,
+.select,
+#page-number {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.button.primary {
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.file-name {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.page-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+#page-number {
+  width: 4.25rem;
+}
+
+.workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+}
+
+.thumbnail-panel {
+  background: var(--panel);
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+}
+
+.thumbnail {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  background: #0b1220;
+}
+
+.thumbnail.active {
+  border-color: var(--accent);
+}
+
+.viewer-panel {
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+#pdf-canvas {
+  background: var(--surface);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
+  display: none;
+}
+
+.empty-state {
+  align-self: center;
+  text-align: center;
+  color: #6b7280;
+}
+
+@media (max-width: 900px) {
+  .workspace {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+  }
+}
